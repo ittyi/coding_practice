@@ -1,3 +1,5 @@
+// 作り直した。テストケースまでclear
+// このケースもclear["♠2","♠4","♥K","♥A","♣10"],["♣Q","♦3","♣J","♠A","♦8"]
 function winnerPairOfCards(player1,player2){
     // hashmapの作成 ※この時、マークは関係ないので除外
     let hashMapNum1 = {};
@@ -12,14 +14,8 @@ function winnerPairOfCards(player1,player2){
         else hashMapNum2[player2[i].slice(1)] = 1;
     }
 
-    const value1 = Object.values(hashMapNum1);
-    const value2 = Object.values(hashMapNum2);
-
-    // 一番最初の勝敗判定：最大数の多さ 
-    // テスト例：["\u26634","\u26657","\u26657","\u26657","\u2663J"],["\u26657","\u26657","\u2663K","\u2660Q","\u2660Q"]
-    if (Math.max(...value1) > Math.max(...value2)) return "player1";
-    else if (Math.max(...value1) < Math.max(...value2)) return "player2";
-    
+    console.log("hashMapNum1", hashMapNum1)
+    console.log("hashMapNum2", hashMapNum2)
     // 2 < 3 < 4 < 5 < 6 … J < Q < K < A 
     // あと比較したいのは、ランクの強さを、『枚数が多いものから。』
     // 一旦、後に使うためのデータ加工をする。 それぞれ手札の[ランク（文字), 実質強さ(indexで表現), 持ってる枚数]
@@ -37,41 +33,76 @@ function winnerPairOfCards(player1,player2){
             byRank2.push([rankAscending[i], i , hashMapNum2[rankAscending[i]]]);
         }
     }
+    console.log("byRank1: ", byRank1) 
+    console.log("byRank2: ", byRank2)
 
-    // 次の勝敗判定：カードの強さ
-    // 4枚の時...3枚の時...と比較
-    for (let i = 4; i > 0; i--){ //持ってる枚数(hashMapNum[rankAscending[i]])が多いものから比較
+    // 一番最初の勝敗判定：最大数の多さ 
+    // テスト例：["♣4","♥7","♥7","♥7","♣J"],["♥7","♥7","♣K","♠Q","♠Q"]
+    // ["♥3","♠9","♦3","♣Q","♦A"],["♥4","♥3","♠10","♦3","♥4"]
+    for (let i = 4; i > 0; i--){
+        let compMaxNum1 = 0;
         let compMaxRank1 = 0;
         for (let j = 0; j < byRank1.length; j++){
-            if (i == byRank1[j][2]) compMaxRank1 = Number(byRank1[j][1]);
+            if (i == byRank1[j][2] && compMaxRank1 < Number(byRank1[j][1])){
+                compMaxNum1 = byRank1[j][2];
+                compMaxRank1 = Number(byRank1[j][1]);
+            } else if (i == byRank1[j][2]){ // このケースに対処["♥2","♠A","♦6"],["♥2","♥2","♥3"]
+                compMaxNum1 = byRank1[j][2];
+                compMaxRank1 = Number(byRank1[j][1]);
+            }
+            console.log(i, j);
+            console.log("compMaxNum1: ", compMaxNum1);
+            console.log("compMaxRank1: ", compMaxRank1);
         }
 
+        let compMaxNum2 = 0;
         let compMaxRank2 = 0;
         for (let j = 0; j < byRank2.length; j++){
-            if (i == byRank2[j][2]) compMaxRank2 = Number(byRank2[j][1]);
+            if (i == byRank2[j][2] && compMaxRank2 < Number(byRank2[j][1])){
+                compMaxNum2 = byRank2[j][2];
+                compMaxRank2 = Number(byRank2[j][1]);
+            } else if (i == byRank2[j][2]){ // このケースに対処["♥2","♠A","♦6"],["♥2","♥2","♥3"]
+                compMaxNum2 = byRank2[j][2];
+                compMaxRank2 = Number(byRank2[j][1]);
+            }
+            console.log(i, j);
+            console.log("compMaxNum2: ", compMaxNum2);
+            console.log("compMaxRank2: ", compMaxRank2);
         }
-        if (compMaxRank1 > compMaxRank2) return "player1";
+
+        // 勝敗判定
+        if (compMaxNum1 > compMaxNum2) return "player1";
+        else if (compMaxNum1 < compMaxNum2) return "player2";
+        else if (compMaxRank1 > compMaxRank2) return "player1";
         else if (compMaxRank1 < compMaxRank2) return "player2";
     }
-    
-    // 枚数ごとの強さ比較後、枚数は同じ場合の強さで最後の勝敗判定
-    let sum1 = 0;
+
+    // 上記も同じ場合、次に枚数の多いカードを同様に比べ、勝敗が決まるまですべてのカードを比べる
+    // ["♥9","♠8","♦7","♣6","♦5"],["♥9","♥8","♠7","♦6","♥4"]
+    // ["♥3","♠4","♦5","♣6","♦7"],["♥2","♥3","♠5","♦6","♥7"]  等々
+    console.log("byRank1: ", byRank1) 
+    console.log("byRank2: ", byRank2)
+    let compRank1 = [];
     for (let i = 0; i < byRank1.length; i++){
-        if (byRank1[i][0] == "A") sum1 += 14;
-        else if (byRank1[i][0] == "K") sum1 += 13;
-        else if (byRank1[i][0] == "Q") sum1 += 12;
-        else if (byRank1[i][0] == "J") sum1 += 11;
-        else sum1 += Number(byRank1[i][0]);
+        compRank1.push(Number(byRank1[i][1]));
+        // console.log("compRank1: ", compRank1)
     }
-    let sum2 = 0;
+    let compRank2 = [];
     for (let i = 0; i < byRank2.length; i++){
-        if (byRank2[i][0] == "A") sum2 += 14;
-        else if (byRank2[i][0] == "K") sum2 += 13;
-        else if (byRank2[i][0] == "Q") sum2 += 12;
-        else if (byRank2[i][0] == "J") sum2 += 11;
-        else sum2 += Number(byRank2[i][0]);
+        compRank2.push(Number(byRank2[i][1]));
+        // console.log("compRank2: ", compRank2)
     }
-    if (sum1 > sum2) return "player1";
-    else if (sum1 < sum2) return "player2";
-    else return "draw";
+    
+    compRank1.sort((a,b) => a-b);
+    compRank2.sort((a,b) => a-b);
+    console.log("compRank1: ", compRank1)
+    console.log("compRank2: ", compRank2)
+    
+    for (let i = compRank1.length; i >= 0; i--){
+        console.log(compRank1[i], compRank2[i])
+        if (compRank1[i] > compRank2[i]) return "player1";
+        else if (compRank1[i] < compRank2[i]) return "player2";
+    }
+    return "draw";
 }
+
