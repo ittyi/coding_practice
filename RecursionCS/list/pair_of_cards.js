@@ -58,20 +58,15 @@ let deck2 = deck1.deckGenerator();
 let dealer = new Dealer();
 let shuffle_deck = dealer.shuffle(deck2);
 let players = dealer.distribution(shuffle_deck, 2);
-// console.log("---これできたらOK！--")
-// console.log(players)
-// console.log("-----あとは、加工して関数に渡すだけ！-----")
 
 // なんか変なことしてる 笑
 // 仕方ないから加工します。
 let player1 = [];
 for (let i = 0; i < players[0].length; i++){
-    // console.log(i, players[0][i])
     player1.push(players[0][i]["mark"] + players[0][i]["value"])
 }
 let player2 = [];
 for (let i = 0; i < players[1].length; i++){
-    // console.log(i, players[1][i])
     player2.push(players[1][i]["mark"] + players[1][i]["value"])
 }
 console.log("player1: ", player1)
