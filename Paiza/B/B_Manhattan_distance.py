@@ -1,9 +1,9 @@
 #  input part
 input_line = input().split(' ')
-tmp = []
+reserved_list = []
 for i in range(int(input_line[0])):
-    tmp2 = input().split(' ')
-    tmp.append(tmp2)
+    tmp = input().split(' ')
+    reserved_list.append(tmp)
 
 
 # とりあえず入力はOK
@@ -22,8 +22,7 @@ coordinate = [[[0] for j in range(int(input_line[2]))] for i in range(int(input_
 
 
 # boolで予約済みが否かを表す boolが良かったけど、パッとわからないから一旦1, 0で表現。
-# print(tmp)
-for i in tmp:
+for i in reserved_list:
     coordinate[int(i[0])][int(i[1])][0] = 1
 
 # 一番良い席p, qから、奇数個横、偶数個横、奇数個の順で座標を走査できるようなロジックを考える　最重要！
