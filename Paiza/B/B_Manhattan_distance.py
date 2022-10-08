@@ -49,7 +49,7 @@ for H in coordinate:
 # インクリメントした座標合計番号の中に0（fakse）がいたらその座標合計番号のリストを全部他のリストにぶち込む
 # その中で、リスト[0]が0のものを全て出力！これでいけるはず。。
 
-# できた！あとは一番良い席の座標合計番号を取得
+# 一番良い席の座標合計番号を取得
 best_seats = coordinate[int(input_line[3])][int(input_line[4])]
 
 
@@ -60,7 +60,6 @@ def checkEqualValue(W, best_seats):
     
     return diffP + diffQ
     
-
 def allManhattanDistances(best_seats):
     indexH = 0
     indexW = 0
@@ -78,8 +77,6 @@ allManhattanDistances(best_seats)
 
 # できたぁあああああ
 # あとは、0, 1, 2、、と見ていって、最初のインデックスがゼロのものを算出する
-checkList = []
-
 def getManhattanList(i):
     retList = []
     indexH = 0
