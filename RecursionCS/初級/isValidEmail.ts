@@ -1,4 +1,3 @@
-// 愚直 Ver.
 // function isValidEmail(email:string): boolean{
 //     if (email[0] == '@') return false
 //     else if (email.indexOf(' ') != -1) return false
@@ -16,6 +15,6 @@ function isValidEmail(email: string): boolean {
     // \.        : ドット
     // [^\s@]+  : スペースと@以外の文字が1文字以上
     // $         : 文字列の末尾
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
 }
